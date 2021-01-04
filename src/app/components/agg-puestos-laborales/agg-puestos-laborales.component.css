@@ -1,0 +1,87 @@
+/*=============================================
+TABLET VERTICAL (MD revisamos en 768px)
+=============================================*/
+
+@media (max-width:991px) and (min-width:860px) {
+    table {
+        width: 100%;
+    }
+    thead th:first-child {
+        display: none;
+    }
+    tbody td:first-child {
+        display: none;
+    }
+    tbody button {
+        display: block;
+        width: 40px;
+        margin-top: 5px;
+    }
+}
+
+
+/*=============================================
+MÓVIL HORIZONTAL (SM revisamos en 576px)
+=============================================*/
+
+@media (max-width:861px) and (min-width:576px) {
+    table {
+        width: 100%;
+    }
+    thead {
+        display: none;
+    }
+    tr:nth-of-type(2n) {
+        background-color: inherit;
+    }
+    tr td:first-child {
+        background-color: #242a33;
+        color: white;
+        font-weight: bold;
+        font-size: 1.3em;
+    }
+    tbody td {
+        display: block;
+    }
+    tbody button {
+        width: 8%;
+        height: 7%;
+    }
+    tbody td:before {
+        content: attr(data-th);
+        display: block;
+    }
+}
+
+
+/*=============================================
+MOVIL VERTICAL (revisamos en 320px)
+=============================================*/
+
+@media (max-width:575px) {
+    table {
+        width: 100%;
+    }
+    thead {
+        display: none;
+    }
+    tr:nth-of-type(2n) {
+        background-color: inherit;
+    }
+    tr td:first-child {
+        background-color: #242a33;
+        color: white;
+        font-weight: bold;
+        font-size: 1.3em;
+    }
+    tbody td {
+        display: block;
+    }
+    tbody button {
+        width: 40px;
+    }
+    tbody td:before {
+        content: attr(data-th);
+        display: block;
+    }
+}

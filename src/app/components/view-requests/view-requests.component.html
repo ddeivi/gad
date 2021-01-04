@@ -1,0 +1,100 @@
+<div class="container mt-5">
+    <h2 class="d-flex justify-content-center">Mis requerimientos</h2>
+    <hr>
+    <div class="float-left mr-3">
+        <img class="perfil_img" src="assets/images/perfil.png">
+    </div>
+    <div class="clearfix"></div>
+    <br>
+    <h4>{{identity.nombre+" "+identity.apellido}}</h4>
+    <h6>Requerimientos totales</h6>
+
+    <hr>
+
+    <hr>
+    <div class="" *ngFor="let request of requests">
+        <div class="col-md-12 mt-4">
+
+
+
+            <div class="float-left mt-3">
+                <h4> <a>{{request.titulo}}</a></h4>
+
+                <span class="badge badge-warning">
+         <a style="color: black;">fecha</a>
+         </span>
+                <span class="badge badge-light ml-1">
+         </span>
+
+                <div class="clearfix"></div>
+
+                <span class="badge badge-success">
+                {{request.estado.estado}}
+                 </span>
+            </div>
+
+
+
+        </div>
+
+
+
+        <div class="col-md-12 float-right hrDenuncias">
+            <div class="col-md-12">
+                <div class="clearfix"></div>
+
+                <div>
+
+                    <!---->
+                    <!-- Button trigger modal -->
+                    <a class="float-right ml-3"> <img src="assets\images\delete.svg" alt="Eliminar" title="Eliminar" class="float-right pointer"></a>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                    <!---->
+
+                    <a class="float-right ml-4"> <img src="assets\images\edit.svg" alt="Editar" title="Editar" class="float-right pointer"></a>
+                </div>
+                <a class="float-right" [routerLink]="['/detalle-solicitud', request.id]" routerLinkActive="router-link-active"> <img src="assets\images\view.svg" alt="Ver" title="Ver" class="float-right pointer"></a>
+            </div>
+            <br>
+            <br>
+            <hr>
+        </div>
+    </div>
+</div>
+
+<!--  </div>-->
+<div class="clearfix"></div>
+
+<div class="container ">
+    <nav aria-label="...">
+        <ul class="pagination justify-content-center">
+            <li class="page-item disabled">
+                <span class="page-link">Previous</span>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">1</a></li>
+            <li class="page-item active">
+                <span class="page-link">
+              2
+              <span class="sr-only">(current)</span>
+                </span>
+            </li>
+            <li class="page-item"><a class="page-link" href="#">3</a></li>
+            <li class="page-item">
+                <a class="page-link" href="#">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>

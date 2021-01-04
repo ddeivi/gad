@@ -1,0 +1,452 @@
+<div class="container">
+    <a class="float-right btn  btn-warning text-dark" data-toggle="modal" data-target="#historialModal" (click)="getHistorial()"><i class="fas fa-file-medical text-dark"></i> Historial</a>
+    <!-- <a class="float-right btn  btn-outline-info"><i class="fas fa-book-medical"></i> Historial</a> -->
+
+    <h2 class="d-flex justify-content-center mt-5">Detalle del requerimiento</h2>
+
+
+
+    <div class=" card ">
+        <ul class="list-group list-group-flush sombra">
+
+
+            <li class="list-group-item " *ngIf="identity && identity.role=='ROLE_USER' && request && request.estado.estado!='Atendido'" data-toggle="modal" data-target="#procesandoModal">
+                <img class=" float-right pointer " title="Información " src="assets/images/help.svg " alt="Información ">
+
+                <h5 class="mt-5 "> Esta solicitud se encuentra siendo procesada en: <strong>{{request.lugar.detalle}}</strong></h5>
+                <!-- <span class="badge badge-info ml-2 "><a style="color: black; ">Fecha salida: </a></span> -->
+
+                <span class="badge badge-warning "><a style="color: black; "><strong>{{request.fecha_solicitud |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</strong></a></span>
+
+
+                <br><br>
+            </li>
+
+            <ul class="list-group">
+                <li class="list-group-item " *ngIf="identity && identity.role=='ROLE_USER' && request && request.estado.estado=='Atendido'">
+                    <img class=" float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#atendidaModal">
+
+                    <!-- <h5 class="mt-5 "> Esta solicitud ya ha sido atendida<strong>{{request.lugar.detalle}}</strong></h5> -->
+                    <h5 class="mt-5 "> Esta solicitud ya ha sido atendida</h5>
+
+                    <span class="badge badge-info"><a style="color: black;"><strong>{{request.fecha_atencion |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</strong> </a></span>
+                    <h5 class="mt-3 "> Tiempo estimado de respuesta: <strong>{{request.fecha_atencion | amDifference: request.fecha_solicitud:'seconds'  | amDuration: 'seconds'   }}</strong></h5>
+
+                </li>
+            </ul>
+
+            <ul class="list-group" *ngIf="request">
+                <li class="list-group-item">
+                    <img class="float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#requerimientoModal">
+                    <h4 class="mt-5 ">
+                        <a> <strong>{{request.titulo}}</strong></a>
+                    </h4>
+                    <div class="float-left mt-1 ">
+                        <!-- <span class="badge badge-warning "><a style="color: black; "> <strong>{{request.fecha_solicitud |  amLocale: 'es' | amTimeAgo}}</strong></a></span> -->
+                        <span class="badge badge-warning "><a style="color: black; "> <strong>{{request.fecha_solicitud |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</strong></a></span>
+
+                        <span class="badge badge-danger ml-2" *ngIf="request.estado.id==1">
+                        {{request.estado.estado}}
+                         </span>
+                        <span class="badge badge-info ml-2" *ngIf="request.estado.id==2">
+                            {{request.estado.estado}}
+                        </span>
+                        <span class="badge badge-dark ml-2" *ngIf="request.estado.id==3">
+                                {{request.estado.estado}}
+                        </span>
+                        <span class="badge badge-success ml-2" *ngIf="request.estado.id==4">
+                            {{request.estado.estado}}
+                    </span>
+                    </div>
+                    <p class="lead mt-5 ">{{request.descripcion}}</p>
+
+                    <a href="{{url+'obtener-archivo/'+request.archivo}}" target="_blank">{{request.archivo}} <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+                </li>
+            </ul>
+            <!-- ---------------------------------------------------------------------------------------------
+            SOLO SI ES DIFERENTE DE USUARIO Y SECRETARIA -  MOSTRAR MEMOS
+            --------------------------------------------------------------------------------------------- -->
+
+
+            <li class="list-group-item" *ngIf="identity && identity.role!='ROLE_USER' && identity.role!='ROLE_SECRETARIA'">
+                <img class="float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#memoModal">
+                <h4 class="mt-5 ">
+                    <a> <strong>Memorándum de {{mensajeResponder}}</strong></a>
+                </h4>
+                <span *ngIf="identity.role== 'ROLE_DIRECCION'" class="badge badge-info mb-2"> <strong><a style="color: black; " *ngIf="atencionSecretaria">{{atencionSecretaria.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+                <span *ngIf="identity.role== 'ROLE_AREA'" class="badge badge-info mb-2"> <strong><a style="color: black; " *ngIf="atencionDireccion">{{atencionDireccion.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+                <span *ngIf="identity.role== 'ROLE_DEPARTAMENTO'" class="badge badge-info mb-2"> <strong><a style="color: black; " *ngIf="atencionArea">{{atencionArea.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+
+                <br>
+                <a *ngIf="identity.role== 'ROLE_DIRECCION' && atencionSecretaria" href="{{url+'obtener-memo-secretaria/'+atencionSecretaria.memo}}" target="_blank">Ver archivos recibidos  <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+                <a *ngIf="identity.role== 'ROLE_AREA' && atencionDireccion" href="{{url+'obtener-memo-direccion/'+atencionDireccion.memo}}" target="_blank">Ver archivos recibidos  <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+                <a *ngIf="identity.role== 'ROLE_DEPARTAMENTO' && atencionArea" href="{{url+'obtener-memo-area/'+atencionArea.memo}}" target="_blank">Ver archivos recibidos  <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+
+
+            </li>
+
+            <!-- ===============================================================
+            OBTENER RESPUESTAS- SECRETARIA- DIRECCION - AREA 
+            ================================================================ -->
+
+            <!-- SECRETARIA -->
+
+            <ul class="list-group" *ngIf="identity && identity.role=='ROLE_SECRETARIA' && respDir" >
+
+                <li class="list-group-item" *ngFor="let respuesta of respDir">
+                    <img class="float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#respuestaModal">
+                    <h4 class="mt-5 ">
+                        <a> <strong>Respuesta de {{mensajeDetalleSolicitud}}</strong></a>
+                    </h4> <span class="badge badge-success mb-2"> <strong><a style="color: black; ">{{respuesta.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+
+                    <div class="" *ngIf="respuesta.archivo !=null && respuesta.archivo != ''">
+                        <p class="lead mt-1 ">{{respuesta.descripcion}}</p>
+
+                        <a href="{{url+'obtener-respuesta/'+respuesta.archivo}}" target="_blank">Ver archivos recibidos  <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+
+                        <a class="float-right btn  btn-outline-info" (click)="reenviar(respuesta.id)">Enviar esta respuesta  <img src="assets/images/enviar.svg " alt="Descargar " title="Descargar "></a>
+
+                    </div>
+                </li>
+
+            </ul>
+
+            <!-- DIRECCION -->
+            <hr>
+            <ul class="list-group" *ngIf="identity && identity.role== 'ROLE_DIRECCION' && respArea">
+                <li class="list-group-item" *ngFor="let respuesta of respArea">
+                    <img class="float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#respuestaModal">
+                    <h4 class="mt-5 ">
+                        <a> <strong>Respuesta de {{mensajeDetalleSolicitud}}</strong></a>
+                    </h4>
+                    <span class="badge badge-success mb-2"> <strong><a style="color: black; ">{{respuesta.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+
+                    <div class="">
+                        <p class="lead mt-1 ">{{respuesta.descripcion}}</p>
+
+                        <a href="{{url+'obtener-respuesta/'+respuesta.archivo}}" target="_blank">Ver archivos recibidos  <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+
+                        <a class="float-right btn  btn-outline-info" (click)="reenviar(respuesta.id)">Enviar esta respuesta  <img src="assets/images/enviar.svg " alt="Descargar " title="Descargar "></a>
+
+                    </div>
+                </li>
+            </ul>
+
+            <!-- AREA -->
+            <ul class="list-group" *ngIf="identity && identity.role== 'ROLE_AREA' && respDepa">
+
+                <li class="list-group-item" *ngFor="let respuesta of respDepa">
+                    <img class="float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#respuestaModal">
+                    <h4 class="mt-5 ">
+                        <a> <strong>Respuesta de {{mensajeDetalleSolicitud}}</strong></a>
+                    </h4>
+                    <span class="badge badge-success mb-2"> <strong><a style="color: black; ">{{respuesta.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+
+                    <div class="">
+                        <p class="lead mt-1 ">{{respuesta.descripcion}}</p>
+                        <a href="{{url+'obtener-respuesta/'+respuesta.archivo}}" target="_blank">Ver archivos recibidos  <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+
+                        <a class="float-right btn  btn-outline-info" (click)="reenviar(respuesta.id)">Enviar esta respuesta  <img src="assets/images/enviar.svg " alt="Descargar " title="Descargar "></a>
+
+
+                    </div>
+
+                </li>
+            </ul>
+
+
+
+            <!-- USUARIO -->
+            <ul class="list-group" *ngIf="identity && identity.role=='ROLE_USER' && respSecre">
+
+
+                <li class="list-group-item" *ngFor="let respuesta of respSecre">
+                    <img class="float-right pointer " title="Información " src="assets/images/help.svg " alt="Información " data-toggle="modal" data-target="#respuestaModal">
+
+                    <h5 class="mt-5 "><strong> Respuesta de su solicitud:</strong> </h5>
+                    <span class="badge badge-success "> <strong><a style="color: black; ">{{respuesta.created_at |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+                    <p class="lead mt-4">{{respuesta.descripcion}}</p>
+
+                    <a href="{{url+'obtener-respuesta/'+respuesta.archivo}}" target="_blank">{{respuesta.archivo}} <img src="assets/images/download.svg " alt="Descargar " title="Descargar "></a>
+
+
+
+                </li>
+            </ul>
+        </ul>
+
+        <br>
+        <div class="col-lg-8 col-xlg-12 col-md-7 " *ngIf="identity && identity.role!='ROLE_USER'">
+            <div class="card">
+                <ul class="nav nav-tabs profile-tab" role="tablist">
+                    <li *ngIf="identity.role !='ROLE_DEPARTAMENTO'" class="nav-item"> <a class="nav-link" data-toggle="tab" href="#asignar" role="tab">Asignar {{mensajeDetalleSolicitud}}</a> </li>
+                    <li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#responder" role="tab">Responder Solicitud a {{mensajeResponder}}</a> </li>
+
+                </ul>
+
+
+
+                <!-- ASIGNAR AREA -->
+                <div class="tab-content">
+
+                    <div class="tab-pane" id="asignar" role="tabpanel">
+                        <div class="card-body">
+
+                            <form class="mt-5 col-xl-6 form-asignar-responder col-sm-12  m-auto " #asignarDireccionForm="ngForm" (ngSubmit)="onSubmit(asignarDireccionForm)">
+
+
+                                <p class="h4 mb-4 text-center ">Asignar a {{mensajeDetalleSolicitud}}</p>
+
+                                <div class="form-group ">
+                                    <label for="inputState "><strong> Seleccionar {{mensajeDetalleSolicitud}}</strong></label>
+
+                                    <ng-select *ngIf="identity.role=='ROLE_SECRETARIA'" #idPuesto="ngModel" [(ngModel)]="atencionSecretaria.id_puesto" placeholder="Seleccionar {{mensajeDetalleSolicitud}} " [ngModelOptions]="{standalone: true}" required>
+                                        <ng-option *ngFor="let puesto of puestosLaborales" [value]="puesto.id">{{puesto.detalle}}</ng-option>
+
+                                    </ng-select>
+
+                                    <ng-select *ngIf="identity.role=='ROLE_DIRECCION'" #idPuesto="ngModel" [(ngModel)]="atencionDireccion.id_puesto" placeholder="Seleccionar {{mensajeDetalleSolicitud}} " [ngModelOptions]="{standalone: true}" required>
+                                        <ng-option *ngFor="let puesto of puestosLaborales" [value]="puesto.id">{{puesto.detalle}}</ng-option>
+
+                                    </ng-select>
+
+                                    <ng-select *ngIf="identity.role=='ROLE_AREA'" #idPuesto="ngModel" [(ngModel)]="atencionArea.id_puesto" placeholder="Seleccionar {{mensajeDetalleSolicitud}} " [ngModelOptions]="{standalone: true}" required>
+                                        <ng-option *ngFor="let puesto of puestosLaborales" [value]="puesto.id">{{puesto.detalle}}</ng-option>
+
+                                    </ng-select>
+
+                                </div>
+
+                                <div class="form-group ">
+                                    <label><strong> Titulo</strong></label>
+                                    <input type="text " class="form-control " placeholder="Titulo asignado " value="{{request.titulo}}" disabled required pattern="[a-zA-ZÀ-ÿ ]+">
+
+                                </div>
+                                <div class="form-group ">
+                                    <label><strong>Descripción</strong></label>
+                                    <textarea style="height: 200px " type="text " class="form-control " placeholder="Descripción " value="{{request.descripcion}}" disabled required></textarea>
+                                </div>
+
+                                <div class="form-group mt-2 ">
+                                    <angular-file-uploader [config]="afuConfig " (ApiResponse)="UploadMemo($event) "></angular-file-uploader>
+
+                                </div>
+                                <div class="form-group">
+
+                                    <button class="btn btn-info my-4 btn-block " type="submit " [disabled]="asignarDireccionForm.invalid">Asignar {{mensajeDetalleSolicitud}}</button>
+                                </div>
+
+
+                            </form>
+                        </div>
+                    </div>
+
+                    <!-- RESPONSE style="width: 100%; margin: auto; display: block;"-->
+                    <div class="tab-pane" id="responder" role="tabpanel">
+
+                        <div class="card-body">
+
+                            <!-- <div class="container-fluid"> -->
+
+                            <form class=" col-xl-6 col-sm-12  m-auto form-asignar-responder" #responseForm="ngForm" (ngSubmit)="responder(responseForm)">
+
+
+                                <br>
+                                <p class="h4 mb-4 text-center">Responder </p>
+
+                                <div class="form-group ">
+                                    <label>Titulo</label>
+                                    <input type="text " class="form-control " placeholder="Titulo de la respuesta " name="titulo" #nombre="ngModel" [(ngModel)]="request.titulo" disabled required pattern="[a-zA-ZÀ-ÿ ]+">
+
+                                </div>
+                                <div class="form-group">
+                                    <label>Descripcion</label>
+                                    <textarea *ngIf="identity.role == 'ROLE_DEPARTAMENTO'" style="height: 200px " type="text " class="form-control " placeholder="Descripción de la respuesta " name="descripcion" #descripcion="ngModel" [(ngModel)]="respuestaDepartamento.descripcion" required></textarea>
+                                    <textarea *ngIf="identity.role == 'ROLE_AREA'" style="height: 200px " type="text " class="form-control " placeholder="Descripción de la respuesta " name="descripcion" #descripcion="ngModel" [(ngModel)]="respuestaArea.descripcion" required></textarea>
+                                    <textarea *ngIf="identity.role == 'ROLE_DIRECCION'" style="height: 200px " type="text " class="form-control " placeholder="Descripción de la respuesta " name="descripcion" #descripcion="ngModel" [(ngModel)]="respuestaDireccion.descripcion" required></textarea>
+                                    <textarea *ngIf="identity.role == 'ROLE_SECRETARIA'" style="height: 200px " type="text " class="form-control " placeholder="Descripción de la respuesta " name="descripcion" #descripcion="ngModel" [(ngModel)]="respuestaSecretaria.descripcion" required></textarea>
+
+                                </div>
+                                <div class="form-group mt-2 ">
+                                    <angular-file-uploader [config]="afuConfigRespuesta" (ApiResponse)="UploadRespuesta($event) "></angular-file-uploader>
+                                </div>
+                                <div class="form-group">
+
+                                    <button class="btn btn-info my-4 btn-block " type="submit ">Responder</button>
+                                </div>
+
+
+                            </form>
+
+                        </div>
+
+                    </div>
+
+                    <!-- </div> -->
+                </div>
+            </div>
+
+
+
+        </div>
+
+
+
+
+        <!--MODAL HISTORIAL-->
+
+
+
+        <!-- Modal -->
+        <div class="modal fade" id="historialModal" tabindex="-1" role="dialog" aria-labelledby="historialModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="historialModalLabel">Historial del requerimiento</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body" *ngFor="let histo of historial">
+                        <h5><strong>{{histo.detalle}}</strong></h5>
+                        <h6 class="mt-2 ">Fecha ingreso:</h6>
+                        <span class="badge badge-warning "> <strong><a style="color: black; ">{{histo.fecha_ingreso |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+                        <h6 class="mt-2 ">Fecha salida:</h6>
+                        <span class="badge badge-success " *ngIf="histo.fecha_atencion != '' "> <strong><a style="color: black; ">{{histo.fecha_atencion |  amLocale: 'es' | amDateFormat:'dddd, DD MMMM  YYYY, h:mm:ss a'}}</a></strong></span>
+                        <span class="badge badge-success " *ngIf="histo.fecha_atencion == '' "> <strong><a style="color: black; ">Procesando</a></strong></span>
+
+                        <h6 class="mt-3 " *ngIf="histo.fecha_atencion != '' "> Tiempo estimado de respuesta:
+
+                            <strong>{{ histo.fecha_atencion | amLocale: 'es' | amDifference: histo.fecha_ingreso:'seconds' | amDuration: 'seconds' }}  
+
+                            </strong>
+                        </h6>
+
+                        <hr>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--PROCESANDO SOLICITUD-->
+
+        <!-- Modal -->
+        <div class="modal fade" id="procesandoModal" tabindex="-1" role="dialog" aria-labelledby="procesandoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="procesandoModalLabel">Información</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="mt-2 ">En este apartado se muestra en que lugar se encuentra siendo procesada su solicitud</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+        <!--INFORMACION SOLICITUD ATENDIDA-->
+        <!-- Modal -->
+        <div class="modal fade" id="atendidaModal" tabindex="-1" role="dialog" aria-labelledby="atendidaModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="atendidaModalLabel">Información</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="mt-2 ">En este apartado se muestra de manera resumida el tiempo de atención de su requerimiento</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--REQUERIMIENTO-->
+        <!-- Modal -->
+        <div class="modal fade" id="requerimientoModal" tabindex="-1" role="dialog" aria-labelledby="requerimientoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="requerimientoModalLabel">Información</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="mt-2 ">En este apartado se muestra la solicitud realizada</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!--MEMO SOLICITUD-->
+
+        <!-- Modal -->
+        <div class="modal fade" id="memoModal" tabindex="-1" role="dialog" aria-labelledby="memoModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="memoModalLabel">Información</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="mt-2 ">En este apartado se muestra el memorándum asignado </h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+
+
+        <!--RESPUESTA SOLICITUD-->
+        <!-- Modal -->
+        <div class="modal fade" id="respuestaModal" tabindex="-1" role="dialog" aria-labelledby="respuestaModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="respuestaModalLabel">Información</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <h6 class="mt-2 ">En este apartado se muestra la respuesta de su solicitud</h6>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>

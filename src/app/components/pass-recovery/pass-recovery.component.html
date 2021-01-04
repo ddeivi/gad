@@ -1,0 +1,57 @@
+<div class="col-12">
+    <div class="card-body col-xl-4 col-md-6 col-sm-12" style="margin: auto; display: block">
+        <form style="margin: auto; display: block" class="align-content-center form-material" id="loginform" #recuperarPass="ngForm" (ngSubmit)="onSubmit(recuperarPass)">
+            <h3 class="box-title m-b-20 text-center">Recuperar contraseña</h3>
+            <a href="javascript:void(0)" class="text-center db"><img src="assets/images/logo.jpg" alt="Home" height="150px" width="150px" style="border-radius: 99px;" /><br/></a>
+            <div class="form-group mt-4">
+                <div class="col-xs-12">
+                    <input class="form-control " type="email" placeholder="Escriba su correo electrónico" name="correo" #correo="ngModel" [(ngModel)]="user.correo" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                    <!-- <small *ngIf="!correo.valid && correo.touched" class="invalid-feedback d-block">{{mensaje}}</small> -->
+                    <div class="alert alert-danger" *ngIf="!correo.valid &&  correo.touched">
+                        Correo incorrecto
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group text-center p-b-10">
+                <div class="col-xs-12">
+                    <button class="btn btn-info btn-lg btn-block text-uppercase waves-effect waves-light" type="submit" [disabled]="recuperarPass.invalid">Enviar código de seguridad</button>
+                    <br><br>
+                    <p class="text-center text-info text-justify">*Si su correo pertenece a una cuenta en nuestro sistema se le enviará un código de seguridad*</p>
+
+                </div>
+            </div>
+            <div class="form-group m-b-0">
+                <div class="col-sm-12 text-center">
+                    <a [routerLink]="['/login']" class="text-dark m-l-5 btn  btn-warning"><b>Regresar</b></a>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+
+
+
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="envioCorreo" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Recuperación de contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                Por favor revise su correo electrónico, hemos enviado el código de seguridad
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Entendido</button>
+            </div>
+        </div>
+    </div>
+</div>

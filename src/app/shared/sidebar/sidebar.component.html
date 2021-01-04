@@ -1,0 +1,79 @@
+<!-- ============================================================== -->
+<!-- Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->
+<aside class="left-sidebar">
+    <!-- Sidebar scroll-->
+    <div class="scroll-sidebar">
+        <!-- Sidebar navigation-->
+        <nav class="sidebar-nav">
+            <ul id="sidebarnav">
+                <li class="user-profile">
+                    <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false" *ngIf="user.red_social != 'true'">
+                        <img *ngIf="identity && identity.imagen!='null'" src="{{url+'mostrar-imagen-usuario/'+user.imagen}}" alt="user" height="30" width="50" />
+                        <img *ngIf="identity && identity.imagen=='null'" src="assets/images/perfil.png" alt="user" height="30" width="50" />
+                        <span class="hide-menu">{{user.nombre + " " + user.apellido }}</span>
+                    </a>
+
+                    <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false" *ngIf="user.red_social == 'true'">
+                        <img *ngIf="identity && identity.imagen!='null'" src="{{user.imagen}}" alt="user" height="30" width="50" />
+                        <img *ngIf="identity && identity.imagen=='null'" src="assets/images/perfil.png" alt="user" height="30" width="50" />
+                        <span class="hide-menu">{{user.nombre + " " + user.apellido }}</span>
+                    </a>
+
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/perfil',identity.sub]">Mi Perfil </a></li>
+                        <li><a [routerLink]="['#']" class="pointer" (click)="logout()">Cerrar sesión</a></li>
+                    </ul>
+                </li>
+                <hr>
+
+                <li class="nav-small-cap" *ngIf="identity.role=='ROLE_USER'">PERSONAL</li>
+
+                <li *ngIf="identity.role=='ROLE_USER'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-file" ></i><span class="hide-menu">Requerimientos <span class="label label-rouded label-themecolor pull-right">2</span></span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a [routerLink]="['/solicitar']">Solicitar </a></li>
+                        <li><a [routerLink]="['/mis-requerimientos']">Mis requerimientos</a></li>
+
+                    </ul>
+                </li>
+                <li class="nav-small-cap" *ngIf="identity.role!='ROLE_USER' && identity.role!='ROLE_ADMIN'">OFICINAS</li>
+                <li *ngIf="identity.role!='ROLE_USER' && identity.role!='ROLE_ADMIN'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fas fa-users" style="font-size: 20px;"></i><span class="hide-menu">Atención <span class="label label-rouded label-themecolor pull-right">1</span></span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li *ngIf="identity.role != 'ROLE_USER' && identity.role != 'ROLE_ADMIN'"><a [routerLink]="['/ver-solicitudes']">Ver solicitudes</a></li>
+
+
+                    </ul>
+                </li>
+
+                <li class="nav-small-cap" *ngIf="identity.role=='ROLE_ADMIN'">Administrador</li>
+                <li *ngIf="identity.role=='ROLE_ADMIN'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fas fa-briefcase" style="font-size: 20px;"></i><span class="hide-menu" >Puestos laborales <span class="label label-rouded label-themecolor pull-right">1</span></span></a>
+                    <ul aria-expanded="false" class="collapse">
+
+                        <li><a [routerLink]="['/puestos-laborales']">Agregar puestos laborales</a></li>
+
+
+
+                    </ul>
+                </li>
+                <li *ngIf="identity.role=='ROLE_ADMIN'"> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="fas fa-users" style="font-size: 20px;"></i><span class="hide-menu" >Roles de usuarios <span class="label label-rouded label-themecolor pull-right">1</span></span></a>
+                    <ul aria-expanded="false" class="collapse">
+
+
+                        <li><a [routerLink]="['/usuarios']">Permisos de usuarios</a></li>
+
+
+                    </ul>
+                </li>
+
+
+
+
+            </ul>
+        </nav>
+        <!-- End Sidebar navigation -->
+    </div>
+    <!-- End Sidebar scroll-->
+</aside>
+<!-- ============================================================== -->
+<!-- End Left Sidebar - style you can find in sidebar.scss  -->
+<!-- ============================================================== -->

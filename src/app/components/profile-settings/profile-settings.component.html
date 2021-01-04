@@ -1,0 +1,191 @@
+<!-- ============================================================== -->
+<!-- Page wrapper  -->
+<!-- ============================================================== -->
+<!-- <div class="page-wrapper"> -->
+
+<!-- ============================================================== -->
+<!-- Container fluid  -->
+<!-- ============================================================== -->
+<div class="container-fluid">
+
+    <!-- Row -->
+    <div class="row">
+        <!-- Column -->
+        <div class="col-lg-4 col-xlg-3 col-md-5">
+            <div class="card">
+                <div class="card-body">
+                    <div class="m-t-30 text-center" *ngIf="user.red_social != 'true'">
+                        <img *ngIf="user.imagen!='null'" src="{{url+'mostrar-imagen-usuario/'+user.imagen}}" class="img-circle" width="150" height="150" />
+                        <img *ngIf="user.imagen=='null'" src="assets/images/perfil.png" class="img-circle" width="150" height="150" />
+
+                        <h4 class="card-title m-t-10">{{user.nombre+" "+user.apellido}}</h4>
+
+                        <h6 class="card-subtitle">{{identity.role}}</h6>
+                        <div class="form-group ml-3">
+                            <angular-file-uploader *ngIf="identity.role=='ROLE_ADMIN'" [config]="afuConfig" (ApiResponse)="Upload($event)"></angular-file-uploader>
+
+                        </div>
+                    </div>
+                    <div class="m-t-30 text-center" *ngIf="user.red_social == 'true'">
+                        <img *ngIf="user.imagen!='null'" src="{{user.imagen}}" class="img-circle" width="150" height="150" />
+                        <img *ngIf="user.imagen=='null'" src="assets/images/perfil.png" class="img-circle" width="150" height="150" />
+
+                        <h4 class="card-title m-t-10">{{user.nombre+" "+user.apellido}}</h4>
+
+                        <h6 class="card-subtitle">{{identity.role}}</h6>
+                        <div class="form-group ml-3">
+                            <angular-file-uploader [config]="afuConfig" (ApiResponse)="Upload($event)"></angular-file-uploader>
+
+                        </div>
+                    </div>
+
+
+                </div>
+                <div>
+                    <hr> </div>
+                <div class="card-body"> <small class="text-muted">Correo</small>
+                    <h6>{{identity.correo}}</h6> <small class="text-muted p-t-30 db">Telefono</small>
+                    <h6>{{user.telefono}}</h6>
+                </div>
+            </div>
+        </div>
+        <!-- Column -->
+        <!-- Column -->
+        <div class="col-lg-8 col-xlg-9 col-md-7 ">
+            <div class="card">
+                <!-- Nav tabs -->
+
+                <ul class="nav nav-tabs profile-tab" role="tablist">
+                    <li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#settings" role="tab">Ajustes</a> </li>
+                </ul>
+                <!-- Tab panes -->
+                <div class="tab-pane" id="settings" role="tabpanel">
+                    <div class="card-body">
+                        <form class="form-horizontal form-material" #updateForm="ngForm" (ngSubmit)="onSubmit(updateForm)">
+                            <div class="form-group">
+                                <label class="col-md-12">Nombre</label>
+                                <div class="col-md-12" *ngIf="identity.role == 'ROLE_ADMIN'">
+                                    <small *ngIf="!nombre.valid && nombre.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input type="text" placeholder="Ingrese su nombre" class="form-control form-control-line" name="nombre" #nombre="ngModel" [(ngModel)]="user.nombre" required pattern="[a-zA-ZÀ-ÿ ]+">
+                                </div>
+                                <div class="col-md-12" *ngIf="identity.role != 'ROLE_ADMIN'">
+                                    <small *ngIf="!nombre.valid && nombre.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input type="text" disabled placeholder="Ingrese su nombre" class="form-control form-control-line" name="nombre" #nombre="ngModel" [(ngModel)]="user.nombre" required pattern="[a-zA-ZÀ-ÿ ]+">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12">Apellido</label>
+                                <div class="col-md-12" *ngIf="identity.role == 'ROLE_ADMIN'">
+                                    <small *ngIf="!apellido.valid && apellido.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input type="text" placeholder="Ingrese su apellido" class="form-control form-control-line" name="apellido" #apellido="ngModel" [(ngModel)]="user.apellido" required pattern="[a-zA-ZÀ-ÿ ]+">
+                                </div>
+                                <div class="col-md-12" *ngIf="identity.role != 'ROLE_ADMIN'">
+                                    <small *ngIf="!apellido.valid && apellido.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input disabled type="text" placeholder="Ingrese su apellido" class="form-control form-control-line" name="apellido" #apellido="ngModel" [(ngModel)]="user.apellido" required pattern="[a-zA-ZÀ-ÿ ]+">
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="example-email" class="col-md-12">Correo</label>
+                                <div class="col-md-12" *ngIf="identity.role == 'ROLE_ADMIN'">
+                                    <small *ngIf="!correo.valid && correo.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input type="email" placeholder="Ingrese su correo" class="form-control form-control-line" name="example-email" id="example-email" name="correo" #correo="ngModel" [(ngModel)]="user.correo" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                </div>
+                                <div class="col-md-12" *ngIf="identity.role != 'ROLE_ADMIN'">
+                                    <small *ngIf="!correo.valid && correo.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input disabled type="email" placeholder="Ingrese su correo" class="form-control form-control-line" name="example-email" id="example-email" name="correo" #correo="ngModel" [(ngModel)]="user.correo" required pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                                </div>
+
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-12">Teléfono</label>
+                                <div class="col-md-12" *ngIf="identity.role == 'ROLE_ADMIN'">
+                                    <small *ngIf="!telefono.valid && telefono.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input minlength="10" maxlength="10" type="tel" type="text" placeholder="Ingrese su telefono" class="form-control form-control-line" name="telefono" #telefono="ngModel" [(ngModel)]="user.telefono" required pattern="[0-9]+">
+                                    <small class="text-info">Ingrese su número de telefono para contacto</small>
+
+                                </div>
+                                <div class="col-md-12" *ngIf="identity.role != 'ROLE_ADMIN'">
+                                    <small *ngIf="!telefono.valid && telefono.touched" class="invalid-feedback d-block">{{mensaje}}</small>
+                                    <input disabled minlength="10" maxlength="10" type="tel" type="text" placeholder="Ingrese su telefono" class="form-control form-control-line" name="telefono" #telefono="ngModel" [(ngModel)]="user.telefono" required pattern="[0-9]+">
+                                    <small class="text-info">Ingrese su número de telefono para contacto</small>
+
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-sm-12">
+                                    <a class="btn btn-dark btn-sm float-right text-white " type="submit" data-toggle='modal' data-target='#modalPass'><i class="fas fa-unlock-alt text-white"></i> Cambiar contraseña</a>
+
+                                </div>
+                            </div>
+                            <div class="form-group" *ngIf="identity.role == 'ROLE_ADMIN'">
+                                <div class="col-sm-12">
+                                    <button class="btn btn-info" type="submit" [disabled]="updateForm.invalid">Actualizar Perfil</button>
+
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Column -->
+</div>
+<!-- Row -->
+<!-- ============================================================== -->
+<!-- End PAge Content -->
+<!-- ============================================================== -->
+
+
+<!-- ============================================================== -->
+<!-- End Container fluid  -->
+<!-- ============================================================== -->
+<!-- ============================================================== -->
+<!-- footer -->
+<!-- ============================================================== -->
+
+<!-- ============================================================== -->
+<!-- End footer -->
+<!-- ============================================================== -->
+<!-- </div> -->
+<!-- ============================================================== -->
+<!-- End Page wrapper  -->
+<!-- ============================================================== -->
+
+
+<!-- Modal -->
+<div class="modal fade" id="modalPass" tabindex="-1" role="dialog" aria-labelledby="exampleModalScrollableTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalScrollableTitle">Cambias contraseña</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+            </div>
+            <div class="modal-body">
+                <label for="inputState "><strong> Coloque su contraseña actual </strong></label>
+
+                <div class="col-md-12">
+                    <input type="password" placeholder="Contraseña actual" class="form-control form-control-line" name="pass" #pass="ngModel" [(ngModel)]="user.password" required>
+
+                </div>
+                <br><br>
+                <label for="inputState "><strong> Coloque su nueva contraseña </strong></label>
+
+                <div class="col-md-12">
+                    <input type="password" placeholder="Contraseña nueva" class="form-control form-control-line" name="nuevaPass" [(ngModel)]='nuevaPassInput' required>
+
+                </div>
+
+
+
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" data-dismiss="modal" (click)="cambiarPass()">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+</div>
